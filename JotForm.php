@@ -10,6 +10,7 @@
 
 class JotForm {
     public $baseURL = "https://api.jotform.com";
+    public $baseURLEU = "https://eu-api.jotform.com";
     private $apiKey;
     private $debugMode;
     private $outputType;
@@ -21,6 +22,12 @@ class JotForm {
         $this->debugMode = $debugMode;
         $this->outputType = strtolower($outputType);
 
+        try {
+           $user = $this->getUser();
+           $this->euOnly = (isset($user['euOnly']) && $user['euOnly']) ? true : false;
+        } catch (Exception $e) {
+           echo $e->getMessage();
+        }
     }
 
     public function __get($property) {
@@ -54,7 +61,12 @@ class JotForm {
             $path = $path.".xml";
         }
 
-        $url = implode("/", array($this->baseURL, $this->apiVersion, $path));
+        $baseAPIURL = $this->baseURL;
+        if ($this->euOnly) {
+            $baseAPIURL = $this->baseURLEU;
+        }
+
+        $url = implode("/", array($baseAPIURL, $this->apiVersion, $path));
 
         $this->_debugDump($params);
 
