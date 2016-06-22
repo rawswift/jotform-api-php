@@ -15,6 +15,7 @@ class JotForm {
     private $debugMode;
     private $outputType;
     private $apiVersion = "v1";
+    private $euOnly = false;
 
     public function __construct($apiKey="", $outputType="json", $debugMode=false){
 
