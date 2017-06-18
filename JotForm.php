@@ -26,7 +26,7 @@ class JotForm {
         try {
            $user = $this->getUser();
            $this->euOnly = (isset($user['euOnly']) && $user['euOnly']) ? true : false;
-        } catch (Exception $e) {
+        } catch (JotFormException $e) {
            echo $e->getMessage();
         }
     }
@@ -127,6 +127,7 @@ class JotForm {
 
             switch ($http_status) {
                 case 400:
+                case 403:
                 case 404:
                     throw new JotFormException($result_obj["message"], $http_status );
                 break;
@@ -138,7 +139,7 @@ class JotForm {
                 break;
 
                 default:
-                    throw new JotFormException($result_obj["info"], $http_status);
+                    throw new JotFormException($result_obj["message"] . ' (' . $result_obj["info"] . ')', $http_status);
                 break;
             }
         }
